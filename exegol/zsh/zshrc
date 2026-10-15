@@ -1,0 +1,23 @@
+# Config file dedicated to the user's personal zshrc profile shared between all exegol containers.
+# This file is sourced in /root/.zshrc file.
+
+# Remove Exegol's update_prompt precmd hook so starship can take over
+add-zsh-hook -d precmd update_prompt
+
+# Starship prompt
+eval "$(starship init zsh)"
+
+# eza aliases
+if command -v eza &>/dev/null; then
+    alias ls="eza --icons --group-directories-first"
+    alias ll="eza -la --icons --group-directories-first"
+    alias lt="eza -T --icons --group-directories-first"
+    alias la="eza -a --icons --group-directories-first"
+fi
+
+# bat
+if command -v batcat &>/dev/null; then
+    alias cat="batcat --style=plain --paging=never"
+elif command -v bat &>/dev/null; then
+    alias cat="bat --style=plain --paging=never"
+fi

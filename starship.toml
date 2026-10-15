@@ -1,0 +1,47 @@
+format = """
+$directory\
+$git_branch\
+$git_status\
+$python\
+$character"""
+
+right_format = """
+$custom"""
+
+add_newline = false
+
+[directory]
+style = "#a0a0a0"
+truncation_length = 3
+format = "[$path]($style) "
+
+[character]
+success_symbol = "[>](bold #ff66cc)"
+error_symbol = "[>](bold #ff2e63)"
+
+[git_branch]
+format = "[$branch]($style) "
+style = "#5c5560"
+symbol = ""
+
+[git_status]
+format = "[$all_status$ahead_behind]($style) "
+style = "#ffcb6b"
+
+[python]
+format = "[$virtualenv]($style) "
+style = "#5c5560"
+detect_files = []
+detect_extensions = []
+
+[custom.vpn]
+command = "ip -4 addr show tun0 2>/dev/null | grep -oP 'inet \\K[\\d.]+'"
+when = "ip link show tun0 2>/dev/null | grep -q UP"
+format = "[vpn $output]($style) "
+style = "#ff66cc"
+
+[custom.target]
+command = "echo $TARGET"
+when = "test -n \"$TARGET\""
+format = "[$output]($style)"
+style = "#ff2e63"

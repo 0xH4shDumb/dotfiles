@@ -1,0 +1,47 @@
+// Coins arrondis sur toutes les fenêtres
+window-rule {
+    geometry-corner-radius 14
+    clip-to-geometry true
+}
+
+// Apps qui s'ouvrent maximisées
+window-rule {
+    match app-id="firefox"
+    match app-id="vivaldi"
+    match app-id="com.vivaldi.Vivaldi"
+    match app-id="Code"
+    match app-id="dev.zed.Zed"
+    open-maximized true
+}
+
+// Apps flottantes
+window-rule {
+    match app-id="org.gnome.Calculator"
+    match app-id="org.gnome.Nautilus" title="^Propriétés"
+    match app-id="pavucontrol"
+    match app-id="nm-connection-editor"
+    open-floating true
+    shadow {
+        on
+    }
+}
+
+// Firefox PiP
+window-rule {
+    match app-id=r#"firefox$"# title="^Picture-in-Picture$"
+    open-floating true
+}
+
+// Shadow uniquement sur la fenêtre active
+window-rule {
+    match is-focused=false
+    shadow {
+        off
+    }
+}
+
+// Password managers bloqués du screen capture
+window-rule {
+    match app-id=r#"^org\.keepassxc\.KeePassXC$"#
+    block-out-from "screen-capture"
+}

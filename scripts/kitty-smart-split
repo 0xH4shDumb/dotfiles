@@ -1,0 +1,46 @@
+#!/bin/bash
+LOCATION="${1:-hsplit}"
+
+# Socket = parent PID (kitty qui lance ce background process)
+KITTY_SOCK="/tmp/kitty-$PPID"
+if [ ! -S "$KITTY_SOCK" ]; then
+    KITTY_SOCK=$(find /tmp -maxdepth 1 -name 'kitty-[0-9]*' -type s 2>/dev/null | head -1)
+fi
+[ -S "$KITTY_SOCK" ] || exit 1
+
+KAT="kitten @ --to unix:$KITTY_SOCK"
+
+read -r TYPE VALUE < <($KAT ls 2>/dev/null | python3 -I -c "
+import json, sys, shlex
+data = json.load(sys.stdin)
+for ow in data:
+    for tab in ow.get('tabs', []):
+        for w in tab.get('windows', []):
+            if w.get('is_focused'):
+                title = w.get('title', '')
+                if '@exegol-' in title:
+                    container = title.split('@')[1].split(':')[0]
+                    print('docker ' + shlex.quote(container))
+                    sys.exit()
+                for p in w.get('foreground_processes', []):
+                    cmdline = p.get('cmdline', [])
+                    if not cmdline:
+                        continue
+                    base = cmdline[0].rsplit('/', 1)[-1]
+                    if base == 'ssh':
+                        print('ssh ' + ' '.join(shlex.quote(a) for a in cmdline))
+                        sys.exit()
+print('default')
+" 2>/dev/null)
+
+case "$TYPE" in
+    docker)
+        $KAT launch --location="$LOCATION" -- docker exec -it "$VALUE" zsh
+        ;;
+    ssh)
+        eval "$KAT launch --location=\"$LOCATION\" -- $VALUE"
+        ;;
+    *)
+        $KAT launch --location="$LOCATION" --cwd=current
+        ;;
+esac

@@ -1,0 +1,4 @@
+spawn-at-startup "waybar"
+spawn-at-startup "swaybg" "-m" "fill" "-i" "/usr/share/wallpapers/a_mountain_range_with_snow.png"
+spawn-at-startup "dunst"
+spawn-sh-at-startup "wl-paste --watch cliphist store"

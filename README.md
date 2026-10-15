@@ -76,6 +76,39 @@ mkdir -p ~/.exegol/my-resources/setup/zsh
 cp exegol/zsh/* ~/.exegol/my-resources/setup/zsh/
 ```
 
+## Curseur — Bibata-Modern-Ice
+
+Le thème de curseur utilisé est [Bibata-Modern-Ice](https://github.com/ful1e5/Bibata_Cursor). Compatible Linux (tous DE/WM) et Windows.
+
+### Linux
+
+```bash
+# Télécharger la dernière release
+curl -sL https://github.com/ful1e5/Bibata_Cursor/releases/latest/download/Bibata-Modern-Ice.tar.xz -o /tmp/Bibata-Modern-Ice.tar.xz
+
+# Extraire et installer
+tar xf /tmp/Bibata-Modern-Ice.tar.xz -C /tmp
+sudo mv /tmp/Bibata-Modern-Ice /usr/share/icons/
+
+# Appliquer (GNOME / GTK)
+gsettings set org.gnome.desktop.interface cursor-theme 'Bibata-Modern-Ice'
+gsettings set org.gnome.desktop.interface cursor-size 16
+```
+
+- **KDE** : Paramètres système → Apparence → Curseurs → choisir Bibata-Modern-Ice
+- **XFCE** : Paramètres → Souris et pavé tactile → Thème → Bibata-Modern-Ice
+- **Wayland (niri/sway/hyprland)** : ajouter dans la config du compositor :
+  ```
+  cursor { theme "Bibata-Modern-Ice"; size 16; }
+  ```
+
+### Windows
+
+1. Télécharger `Bibata-Modern-Ice-Windows.zip` depuis les [releases](https://github.com/ful1e5/Bibata_Cursor/releases)
+2. Extraire l'archive
+3. Clic droit sur `install.inf` → **Installer**
+4. Paramètres → Bluetooth et appareils → Souris → Paramètres de souris supplémentaires → Pointeurs → choisir Bibata-Modern-Ice
+
 ## Hardware
 
 - CPU: Ryzen 7 5800X
